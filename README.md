@@ -29,30 +29,35 @@
 
 2. app
 
-  - 项目中的代码、资源等内容都是放置在这个目录下。
+- 项目中的代码、资源等内容都是放置在这个目录下。
 
 3. build
 
-  - 这个目录主要包含了一些在编译时自动生成的文件
+- 这个目录主要包含了一些在编译时自动生成的文件
 
 4. gradle
 
-  - 这个目录下包含了gradle wrapper的配置文件，使用gradle wrapper的方式不需要提前将gradle下载好，而是会自动根据本地的缓存情况决定是否需要联网下载gradle。Android Studio默认就是启用gradle wrapper方式的，如果需要更改成离线模式，可以点击Android Studio导航栏->File->Settings->Build,Execution,Deployment->Gradle，进行配置更改。
+- 这个目录下包含了gradle wrapper的配置文件，使用gradle wrapper的方式不需要提前将gradle下载好，而是会自动根据本地的缓存情况决定是否需要联网下载gradle。Android Studio默认就是启用gradle wrapper方式的，如果需要更改成离线模式，可以点击Android Studio导航栏->File->Settings->Build,Execution,Deployment->Gradle，进行配置更改。
 
 5. .gitignore
-  - 这个文件是用来将指定的目录或文件排除在版本控制之外的。
+
+- 这个文件是用来将指定的目录或文件排除在版本控制之外的。
 
 6. build.gradle
-  - 这是项目全局的gradle构建脚本。
+
+- 这是项目全局的gradle构建脚本。
 
 7. gradle.properties
-  - 这个文件是全局的gradle配置文件。
+
+- 这个文件是全局的gradle配置文件。
 
 8. gradlew和gradlew.bat
-  - 这两个文件是用来在命令行界面中执行gradle命令的，其中gradlew是在Linux或Mac系统中使用，gradlew.bat是在Windows系统中使用。
+
+- 这两个文件是用来在命令行界面中执行gradle命令的，其中gradlew是在Linux或Mac系统中使用，gradlew.bat是在Windows系统中使用。
 
 9. HelloWorld.iml
-  - iml文件是所有IntelliJ IDEA项目都会自动生成的一个文件，用于标识这是一个IntelliJ IDEA项目
+
+- iml文件是所有IntelliJ IDEA项目都会自动生成的一个文件，用于标识这是一个IntelliJ IDEA项目
 
 10. local.properties
 
@@ -122,6 +127,196 @@ fun methodName(param1: Int, param2: Int): Int{
 
 - fun是定义函数的关键字，括号内表示函数参数，参数的声明格式是“参数名: 参数类”，括号后的“: Int”是代表函数返回一个Int类型的数据。
 
+- if条件语句
+
+  - Kotlin中的if语句有一个额外功能，它可以有返回值，返回值就是if语句每一个条件中最后一行代码的返回值。
+
+  ```Kotlin
+  fun largerNumber(num1: Int, num2: Int): Int {
+    val value = if (num1 > num2){
+      num1
+    }else {
+      num2
+    }
+    return value
+  }
+  ```
+
+- 更简洁的版本
+
+  ```Kotlin
+  fun largerNumber(num1: Int, num2: Int): Int {
+    return if (num1 > num2) {
+      num1
+    } else {
+      num2
+    }
+  }
+  ```
+
+- 更简洁的版本
+
+```Kotlin
+fun largerNumber(num1: Int, num2: Int) = if (num1 > num2) {
+  num1
+} else {
+  num2
+}
+```
+
+- 一行代码
+
+```Kotlin
+fun largerNumber(num1: Int, num2: Int) = if (num1 > num2) num1 else num2
+```
+
+- when条件语句
+
+```Kotlin
+fun getScore(name: String) = if (name == "Tom") {
+  86
+} else if (name == "Jim") {
+  77
+} else if (name == "Jack") {
+  95
+} else if (name == "Lily") {
+  100
+} else {
+  0
+}
+```
+
+- 用when语句的写法：
+
+```Kotlin
+fun getScore(name: String) = when(name) {
+  "Tom" -> 86
+  "Jim" -> 77
+  "Jack" -> 95
+  "Lily" -> 100
+  else -> 0
+}
+```
+
+- when语句还允许进行类型匹配。
+
+```Kotlin
+fun checkNumber(num: Number){
+  when (num) {
+    is Int -> printLn("number is Int")
+    is Double -> println("number is Double")
+    else -> println("number not support")
+  }
+}
+```
+
+- when语句不带参数的写法
+
+```Kotlin
+fun getScore(name: String) = when {
+  name == "Tom" -> 86
+  name == "Jim" -> 77
+  name == "Jack" -> 95
+  name == "Lily" -> 100
+  else -> 0
+}
+```
+
+- 假设所有名字以Tom开头的人，他的分数都是86分
+
+```Kotlin
+fun getScore(name: String) = when {
+  name.startsWith("Tom") -> 86
+  name == "Jim" -> 77
+  name == "Jack" -> 95
+  name == "Lily" -> 100
+  else -> 0
+}
+```
+
+- 要使一个类可以被继承，要在类的前面加上open关键字
+
+```Kotlin
+open class Person{
+
+}
+```
+
+- Kotlin将构造函数分成两种：主构造函数和次构造函数。</p>
+每个类默认都有一个不带参数的主构造函数，当然你也可以显式地给它指明参数。主构造函数的特点是没有函数体，直接定义在类名的后面即可。
+
+```Kotlin
+class Student(val sno: String, val grade: Int) : Person() {
+
+}
+```
+
+- 需要实例化时
+
+```Kotlin
+val student = Student("a123", 5)
+```
+
+- Kotlin给我们提供一个init结构体，所有主构造函数中的逻辑都可以写在里面
+
+```Kotlin
+  class Student(val sno: String, val grade: Int) : Person() {
+    init {
+      println("sno is " + sno)
+      println("grade is " + grade)
+    }
+  }
+```
+
+- Kotlin规定，当一个类既有主构造函数又有次构造函数时，所有的次构造函数都必须调用主构造函数（包括间接调用）。
+
+```Kotlin
+class Student(val sno: String, val grade: Int, name: String, age: Int) :
+        Person(name, age) {
+          constructor(name: String, age: Int) : this("", 0, name, age) {
+
+          }
+
+          constructor() : this("", 0) {
+
+          }
+        }
+```
+
+- 第一个次构造函数接受name和age参数，然后它又通过this关键字调用了主构造函数，并将sno和grade这两个参数赋值成初始值；第二个次构造函数不接受任何参数，它通过this关键字调用我们刚才定义的第一个次构造函数，并将name和age参数也赋值成初始值。
+
+- 类中只有次构造函数，没有主构造函数
+
+```Kotlin
+class Student : Person {
+  constructor(name: String, age: Int) : super(name, age){
+
+  }
+}
+```
+
+- 接口
+
+```Kotlin
+interface Study {
+  fun readBooks()
+  fun doHomework()
+}
+```
+
+- 继承父类和实现接口
+
+```Kotlin
+class Student(name: String, age: Int) : Person(name, age), Study {
+  override fun readBooks() {
+    println(name + " is reading.")
+  }
+
+  override fun doHomework() {
+    println(name + " is doing homework.")
+  }
+}
+```
 
 ## 第六章
 
