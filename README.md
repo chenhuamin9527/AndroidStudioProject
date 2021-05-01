@@ -318,6 +318,258 @@ class Student(name: String, age: Int) : Person(name, age), Study {
 }
 ```
 
+- 接口中的函数默认实现，现在当一个类去实现Study接口时，只会强制要求实现readBooks()函数，而doHomework()函数则可以自由选择实现或者不实现，不实现时就会自动使用默认的实现逻辑。
+
+```Kotlin
+interface Study{
+  fun readBooks()
+
+  fun doHomework() {
+    println("do homework default implementation.")
+  }
+}
+```
+
+修饰符|Java|Kotlin
+--|--|--
+public|所有类可见|所有类可见
+private|当前类可见|当前类可见
+protected|当前类、子类、同一包路径下的类可见|当前类、子类可见
+default|同一包路径下的类可见（默认）|无
+internal|无|同一模块中的类可见
+
+- 数据类通常需要重写equals()、hashCode()、toString()这几个方法。
+- equals()方法用于判断两个数据类是否相等
+- hashCode()方法作为equals()的配套方法，也需要一起重写，否则会导致HashMap、HashSet等hash相关的系统类无法正常工作。
+- toString()方法用于提供更清晰的输入日志，否则一个数据类默认打印出来的就是一行内存地址。
+
+- 假设使用Java来实现一个手机数据类
+
+```Java
+public class Cellphone
+  String brand;
+  double price;
+
+  public Cellphone(String brand, double price) {
+    this.brand = brand;
+    this.price = price;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Cellphone) {
+      Cellphone other = (Cellphone) obj;
+      return other.brand.equals(brand) && other.price == price;
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return brand.hashCode() + (int) price;
+  }
+
+  @Override
+  public String toString() {
+    return "Cellphone(brand=") + brand + ", price=" + price + ")";
+  }
+```
+
+- 用Kotlin来实现同样的类，在com.example.helloworld包->New->Kotlin File/Class，在弹出的对话框中输入"Cellphone"，创建类型选择"Class"。
+
+```Kotlin
+data class Cellphone(val brand: String, val price: Double)
+```
+
+- 单类模式，用于避免创建重复的对象。
+
+- 常见Java写法
+
+```Java
+public class Singleton {
+  private static Singleton instance;
+
+  private Singleton() {}
+
+  public synchronized static Singleton getInstance() {
+    if (instance == null) {
+      instance = new Singleton();
+    }
+    return instance;
+  }
+
+  public void singletonTest() {
+    System.out.println("singletonTest is called.");
+  }
+}
+```
+
+- 首先为了禁止外部创建Singleton的实例，使用private关键字将Singleton的构造函数私有化，然后给外部提供了一个getInstance()静态方法用于获取Singleton的实例。在getInstance()方法中，我们判断如果当前缓存的Singleton实例为null，就创建一个新的实例，否则直接返回缓存的实例即可。
+
+- 调用singletonTest()方法
+
+```Java
+Singleton singleton = Singleton.getInstance();
+singleton.singletonTest();
+```
+
+- 在Kotlin中创建一个单例类的方式极其简单，只需要将class关键字改成object关键字即可。
+
+```Kotlin
+object Singleton {
+  fun singletonTest() {
+    println("singletonTest is called.")
+  }
+}
+```
+
+- 调用单例类中的函数
+
+```Kotlin
+Singleton.singletonTest()
+```
+
+- ArrayList实例一般写法
+
+```Kotlin
+val list = ArrayList<String>()
+list.add("Apple")
+list.add("Banana")
+list.add("Orange")
+list.add("Pear")
+list.add("Grape")
+```
+
+- listOf()函数创建的是一个不可变的集合，无法对集合进行添加、修改或删除操作。
+
+```Kotlin
+fun main() {
+  val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape")
+  for (fruit in list) {
+    println(fruit)
+  }
+}
+```
+
+- 使用mutableListOf函数创建一个可变集合
+
+```Kotlin
+fun main() {
+  val list = mutableListOf("Apple", "Banana", "Orange", "Pear", "Grape")
+  list.add("Watermelon")
+  for (fruit in list) {
+    println(fruit)
+  }
+}
+```
+
+- set集合中不可以存放重复元素，与List集合用法相似
+- Map是一种键值对形式的数据结构。
+
+```Kotlin
+val map = HashMap<String, Int>()
+map.put("Apple", 1)
+map.put("Banana", 2)
+map.put("Orange", 3)
+map.put("Pear", 4)
+map.put("Grape", 5)
+```
+
+- 在Kotlin中更推荐的写法
+
+```Kotlin
+map["Apple"] = 1  //向Map中添加一条数据
+
+val number = map["Apple"] //在map中读取数据
+```
+
+```Kotlin
+val map = HashMap<String, Int>()
+map["Apple"] = 1
+map["Banana"] = 2
+map["Orange"] = 3
+map["Pear"] = 4
+map["Grape"] = 5
+```
+
+```Kotlin
+val map = mapOf("Apple" to 1, "Banana" to 2, "Orange" to 3, "Pear" to 4, "Grape" to 5)
+
+fun main() {
+  val map = mapOf("Apple" to 1, "Banana" to 2, "Orange" to 3, "Pear" to 4, "Grape" to 5)
+  for ((fruit, number) in map) {
+  println("fruit is " + fruit + ", number is " + number)
+ }
+}
+```
+
+- 集合的函数式API
+
+
+- 在一个水果集合中找到单词最长的水果
+
+```Kotlin
+val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon")
+var maxLengthFruit = ""
+for (fruit in list) {
+  if (fruit.length > maxLengthFruit.length) {
+  maxLengthFruit = fruit
+  }
+}
+println("max length fruit is " + maxLengthFruit)
+```
+
+```Kotlin
+val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon")
+val maxLengthFruit = list.maxBy { it.length }
+println("max length fruit is " + maxLengthFruit)
+```
+
+- Lambda表达式的语法结构
+
+```Kotlin
+{参数名1: 参数类型, 参数名2: 参数类型 -> 函数体}
+```
+
+- 上述例子Lambda表达式的简化过程
+
+```Kotlin
+val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon")
+val lambda = { fruit: String -> fruit.length }
+val maxLengthFruit = list.maxBy(lambda)
+```
+
+- 省略lambda变量
+
+```Kotlin
+val maxLengthFruit = list.maxBy({ fruit: String -> fruit.length })
+```
+
+- 当Lambda参数是函数的最后一个参数时，可以将Lambda表达式移到函数括号的外面
+
+```Kotlin
+val maxLengthFruit = list.maxBy() { fruit: String -> fruit.length }
+```
+
+- 当Lambda参数时函数的唯一一个参数时，可以将函数的括号省略
+
+```Kotlin
+val maxLengthFruit = list.maxBy { fruit: String -> fruit.length}
+```
+
+- 由于Kotlin拥有出色的类型推导机制，Lambda表达式中的参数列表大多数情况下不必声明参数类型
+
+```Kotlin
+val maxLengthFruit = list.maxBy { fruit -> fruit.length}
+```
+
+- 当Lambda表达式的参数列表中只有一个参数时，不必声明参数名，而是用it关键字代替
+
+```Kotlin
+val maxLengthFruit = list.maxBy{ it.length }
+```
+
+
 ## 第六章
 
 - 广播机制简介
