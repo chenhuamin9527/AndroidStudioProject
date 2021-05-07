@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androids="http://schemas.android.com/apk/res/android"
+    androids:layout_width="match_parent"
+    androids:layout_height="match_parent">
+
+    <Button
+        androids:id="@+id/makeCall"
+        androids:layout_width="match_parent"
+        androids:layout_height="wrap_content"
+        androids:text="Make Call" />
+
+</LinearLayout>

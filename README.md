@@ -569,6 +569,94 @@ val maxLengthFruit = list.maxBy { fruit -> fruit.length}
 val maxLengthFruit = list.maxBy{ it.length }
 ```
 
+- 比如将集合中所有的水果名都变成大写模式
+
+```Kotlin
+fun main() {
+  val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon")
+  val newList = list.map { it.toUpperCase() }
+  for (fruit in newList) {
+    println(fruit)
+  }
+}
+```
+
+- filter函数可以用来过滤集合中的数据的，它可以单独使用，也可以配合刚才的map函数一起使用。
+
+```Kotlin
+fun main() {
+  val list = listOf{"Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon"}
+  val newList = list.filter { it.length <= 5 }
+                    .map { it.toUpperCase() }
+  for (fruit in newList) {
+    println(fruit)
+  }
+}
+```
+
+- any和all函数
+
+```Kotlin
+fun main() {
+  val list = listOf("Apple", "Banana", "Orange", "Pear", "Grape", "Watermelon")
+  val anyResult = list.any { it.length <= 5 }   //集合中是否存在5个字母以内的单词
+  val allResult = list.all { it.length <= 5 }   //集合中是否所有单词都在5个字母以内
+  println("anyResult is " + anyResult + ", allResult is " + allResult)
+}
+```
+
+- Thread类的构造方法中接受一个Runnable参数
+
+```Java
+//Java写法
+new Thread(new Runnable() {
+  @Override
+  public void run() {
+    System.out.println("Thread is running");
+  }
+}).start();
+```
+
+```Kotlin
+//Kotlin写法
+Thread(object: Runnable {
+  override fun run() {
+    println("Thread is running")
+  }
+}).start()
+```
+
+```Kotlin
+//Kotlin更精简版本
+Thread({
+  println("Thread is running")
+}).start()
+
+//如果Lambda表达式是方法的唯一一个参数，还可以将方法的括号的省略
+Thread{
+  println("Thread is running")
+}.start()
+```
+
+```Kotlin
+if (a != null) {
+  a.doSomething()
+}
+
+//等同于上面
+a?.doSomething()
+```
+
+```Kotlin
+val c = if (a ! = null) {
+  a
+} else {
+  b
+}
+
+//等同于上面
+val c = a ?: b
+```
 
 ## 第六章
 
