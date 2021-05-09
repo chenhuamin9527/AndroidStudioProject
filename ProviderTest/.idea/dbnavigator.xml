@@ -25,13 +25,13 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="62da529a-84b1-41c5-a611-2cea2186e5dc">
+      <connection connection-id="cf13a7b9-ead5-45dc-8f74-36b9f10abaaf">
         <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="62da529a-84b1-41c5-a611-2cea2186e5dc">
+    <connection id="cf13a7b9-ead5-45dc-8f74-36b9f10abaaf">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
@@ -39,15 +39,13 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="62da529a-84b1-41c5-a611-2cea2186e5dc" />
+    <connection id="cf13a7b9-ead5-45dc-8f74-36b9f10abaaf" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="62da529a-84b1-41c5-a611-2cea2186e5dc" dataset="main.Book" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="cf13a7b9-ead5-45dc-8f74-36b9f10abaaf" dataset="main.Book" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
-    <last-used-providers>
-      <object-type object-type="TABLE" editor-provider="DATA" />
-    </last-used-providers>
+    <last-used-providers />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -72,7 +70,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="62da529a-84b1-41c5-a611-2cea2186e5dc" active="true">
+      <connection id="cf13a7b9-ead5-45dc-8f74-36b9f10abaaf" active="true">
         <database>
           <name value="Connection" />
           <description value="" />

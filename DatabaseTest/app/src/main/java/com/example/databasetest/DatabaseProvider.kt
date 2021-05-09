@@ -7,14 +7,12 @@ import android.database.Cursor
 import android.net.Uri
 
 class DatabaseProvider : ContentProvider() {
-
     private val bookDir = 0
     private val bookItem = 1
     private val categoryDir = 2
     private val categoryItem = 3
     private val authority = "com.example.databasetest.provider"
     private var dbHelper: MyDatabaseHelper? = null
-
     private val uriMatcher by lazy {
         val matcher = UriMatcher(UriMatcher.NO_MATCH)
         matcher.addURI(authority, "book", bookDir)
@@ -23,34 +21,33 @@ class DatabaseProvider : ContentProvider() {
         matcher.addURI(authority, "category/#", categoryItem)
         matcher
     }
-
     override fun onCreate() = context?.let {
         dbHelper = MyDatabaseHelper(it, "BookStore.db", 2)
         true
     } ?: false
-
     override fun query(uri: Uri, projection: Array<String>?, selection: String?,
                        selectionArgs: Array<String>?, sortOrder: String?) = dbHelper?.let {
         // 查询数据
         val db = it.readableDatabase
         val cursor = when (uriMatcher.match(uri)) {
-            bookDir -> db.query("Book", projection, selection, selectionArgs, null, null, sortOrder)
+            bookDir -> db.query("Book", projection, selection, selectionArgs,
+                    null, null, sortOrder)
             bookItem -> {
                 val bookId = uri.pathSegments[1]
-                db.query("Book", projection, "id = ?", arrayOf(bookId), null, null, sortOrder)
+                db.query("Book", projection, "id = ?", arrayOf(bookId), null, null,
+                        sortOrder)
             }
-            categoryDir -> db.query("Category", projection, selection, selectionArgs, null, null, sortOrder)
+            categoryDir -> db.query("Category", projection, selection, selectionArgs,
+                    null, null, sortOrder)
             categoryItem -> {
                 val categoryId = uri.pathSegments[1]
-                db.query("Category", projection, "id = ?", arrayOf(categoryId), null, null, sortOrder)
-
+                db.query("Category", projection, "id = ?", arrayOf(categoryId),
+                        null, null, sortOrder)
             }
             else -> null
         }
         cursor
     }
-
-
     override fun insert(uri: Uri, values: ContentValues?) = dbHelper?.let {
         // 添加数据
         val db = it.writableDatabase
@@ -67,9 +64,9 @@ class DatabaseProvider : ContentProvider() {
         }
         uriReturn
     }
-
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?) = dbHelper?.let {
-        //更新数据
+    override fun update(uri: Uri, values: ContentValues?, selection: String?,
+                        selectionArgs: Array<String>?) = dbHelper?.let {
+        // 更新数据
         val db = it.writableDatabase
         val updatedRows = when (uriMatcher.match(uri)) {
             bookDir -> db.update("Book", values, selection, selectionArgs)
@@ -79,27 +76,37 @@ class DatabaseProvider : ContentProvider() {
             }
             categoryDir -> db.update("Category", values, selection, selectionArgs)
             categoryItem -> {
-                val category = uri.pathSegments[1]
+                val categoryId = uri.pathSegments[1]
                 db.update("Category", values, "id = ?", arrayOf(categoryId))
             }
             else -> 0
         }
         updatedRows
     } ?: 0
-
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?) = dbHelper?.let {
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?)
+            = dbHelper?.let {
         // 删除数据
         val db = it.writableDatabase
         val deletedRows = when (uriMatcher.match(uri)) {
-            bookDir -> db.delete("Book")
+            bookDir -> db.delete("Book", selection, selectionArgs)
+            bookItem -> {
+                val bookId = uri.pathSegments[1]
+                db.delete("Book", "id = ?", arrayOf(bookId))
+            }
+            categoryDir -> db.delete("Category", selection, selectionArgs)
+            categoryItem -> {
+                val categoryId = uri.pathSegments[1]
+                db.delete("Category", "id = ?", arrayOf(categoryId))
+            }
+            else -> 0
         }
+        deletedRows
+    } ?: 0
+    override fun getType(uri: Uri) = when (uriMatcher.match(uri)) {
+        bookDir -> "vnd.android.cursor.dir/vnd.com.example.databasetest.provider.book"
+        bookItem -> "vnd.android.cursor.item/vnd.com.example.databasetest.provider.book"
+        categoryDir -> "vnd.android.cursor.dir/vnd.com.example.databasetest.provider.category"
+            categoryItem -> "vnd.android.cursor.item/vnd.com.example.databasetest.provider.category"
+        else -> null
     }
-
-    override fun getType(uri: Uri): String? {
-        TODO("Implement this to handle requests for the MIME type of the data" +
-                "at the given URI")
-    }
-
-
-
 }

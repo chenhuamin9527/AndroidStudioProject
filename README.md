@@ -505,7 +505,6 @@ fun main() {
 
 - 集合的函数式API
 
-
 - 在一个水果集合中找到单词最长的水果
 
 ```Kotlin
@@ -657,6 +656,201 @@ val c = if (a ! = null) {
 //等同于上面
 val c = a ?: b
 ```
+
+- let函数，提供函数式API的编程接口，并将原始调用对象作为参数传递到Lambda表达式中。
+
+```Kotlin
+
+fun doStudy(study: Study?) {
+  if (study != null) {
+  study.readBooks()
+  }
+  if (study != null) {
+  study.doHomework()
+  }
+}
+
+// 使用let函数的写法
+fun doStudy(study: Study?) {
+  study?.let { stu ->
+  stu.readBooks()
+  stu.doHomework()
+  }
+}
+
+// 简化版本
+fun doStudy(study: Study?) {
+  study?.let {
+  it.readBooks()
+  it.doHomework()
+  }
+}
+```
+
+- 字符串内嵌表达式
+
+```Kotlin
+"hello, ${obj.name}. nice to meet you!"
+
+//当表达式中仅有一个变量时可以将大括号省略
+"hello, $name. nice to meet you!"
+```
+
+- 函数的参数默认值
+  - 具体来讲，我们可以在定义函数的时候给任意参数设定一个默认值，这样当调用此函数时就不
+会强制要求调用方为此参数传值，在没有传值的情况下会自动使用参数的默认值。
+
+```Kotlin
+fun printParams(num: Int, str: String = "hello") {
+  println("num is $num , str is $str")
+}
+```
+
+- Kotlin提供了另外一种神奇的机制，就是可以通过键值对的方式来传参
+
+```Kotlin
+fun printParams(num: Int = 100, str: String) {
+  println("num is $num , str is $str")
+}
+fun main() {
+  printParams(str = "world")
+}
+```
+
+## 第三章
+
+- AndroidManifest文件
+
+```XML
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.example.activitytest">
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
+    <activity android:name=".FirstActivity"
+      android:label="This is FirstActivity">
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <!-- 为程序配置主Activity -->
+    </activity>
+  </application>
+</manifest>
+
+<!-- android:label为Activity中标题栏的内容 -->
+```
+
+- 在Activity中使用Toast
+
+  - Toast在程序中可以使用一些短小的信息通知给用户，这些信息会在一段时间后自动消失
+
+```Kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+  super.onCreate(savedInstanceState)
+  setContentView(R.layout.first_layout)
+  val button1: Button = findViewById(R.id.button1)
+  button1.setOnClickListener {
+  Toast.makeText(this, "You clicked Button 1", Toast.LENGTH_SHORT).show()
+  }
+}
+```
+
+- 在Activity中使用Menu
+  - 首先在res目录下新建一个menu文件夹，右击res目录→New→Directory，输入文件夹
+名“menu”，点击“OK”。接着在这个文件夹下新建一个名叫“main”的菜单文件，右击menu
+文件夹→New→Menu resource file。
+  - 文件名输入“main”，点击“OK”完成创建，然后在main.xml中添加如下代码：
+
+```XML
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+id/add_item"
+    android:title="Add"/>
+  <item
+    android:id="@+id/remove_item"
+    android:title="Remove"/>
+</menu>
+```
+
+- 然后在onCreateOptionsMenu()方法中编写如下代码
+
+```Kotlin
+override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+  menuInflater.inflate(R.menu.main, menu)
+  return true
+}
+```
+
+- Kotlin中的语法糖
+
+```Kotlin
+val book = Book()
+book.pages = 500
+val bookPages = book.pages
+
+//Kotlin会自动将上述代码转换成调用setPages()方法和getPages()方法。
+```
+
+- 上述的inflate()方法接收两个参数：第一个参数用于指定我们通过哪一个资源文件来创建菜单，第二个参数用于指定我们的菜单项将添加到哪一个Menu对象中。
+
+- Intent是Android程序中各组件之间进行交互的一种重要方式，它不仅可以指明当前组件想要执
+行的动作，还可以在不同组件之间传递数据。
+- Intent大致可以分为两种：显式Intent和隐式Intent。
+- Intent有多个构造函数的重载，其中一个是Intent(Context packageContext,
+Class<?> cls)。这个构造函数接收两个参数：第一个参数Context要求提供一个启动Activity的上下文；第二个参数Class用于指定想要启动的目标Activity，通过这个构造函数就可以构建出Intent的“意图”。那么接下来我们应该怎么使用这个Intent呢？Activity类中提供了一个startActivity()方法，专门用于启动Activity，它接收一个Intent参数，这里我们将构建好的Intent传入startActivity()方法就可以启动目标Activity了。
+
+```Kotlin
+// FirstActivity中的按钮，启动SecondActivity
+button1.setOnClickListener {
+  val intent = Intent(this, SecondActivity::class.java)
+  startActivity(intent)
+}
+
+// Kotlin中SecondActivity::class.java的写法就相当于Java中SecondActivity.class的写法。
+```
+
+- 隐式Intent
+  - 相比于显式Intent，隐式Intent则含蓄了许多，它并不明确指出想要启动哪一个Activity，而是指定了一系列更为抽象的action和category等信息，然后交由系统去分析这个Intent，并帮我们找出合适的Activity去启动。
+
+- 通过在\<activity>标签下配置\<intent-filter>的内容，可以指定当前Activity能够响应
+的action和category
+
+```XML
+// SecondActivity的AndroidManifest.xml
+<activity android:name=".SecondActivity" >
+  <intent-filter>
+    <action android:name="com.example.activitytest.ACTION_START" />
+    <category android:name="android.intent.category.DEFAULT" />
+  </intent-filter>
+</activity>
+<!-- 只有<action>和<category>中的内容同时匹配Intent中指定的action和category时，这个Activity才能响应该Intent。 -->
+```
+
+```Kotlin
+button1.setOnClickListener {
+  //android.intent.category.DEFAULT是一种默认的category
+  val intent = Intent("com.example.activitytest.ACTION_START")
+  startActivity(intent)
+}
+
+```
+
+- 与此对应，我们还可以在\<intent-filter>标签中再配置一个\<data>标签，用于更精确地指定当前Activity能够响应的数据。\<data>标签中主要可以配置以下内容。
+  - android:scheme。用于指定数据的协议部分，如上例中的https部分。
+  - android:host。用于指定数据的主机名部分，如上例中的www.baidu.com部分。
+  - android:port。用于指定数据的端口部分，一般紧随在主机名之后。
+  - android:path。用于指定主机名和端口之后的部分，如一段网址中跟在域名之后的内
+容。
+  - android:mimeType。用于指定可以处理的数据类型，允许使用通配符的方式进行指定。
+- 只有当\<data>标签中指定的内容和Intent中携带的Data完全一致时，当前Activity才能够响应该Intent。当android:scheme为https，就可以响应所有https协议的Intent了。
+
+
 
 ## 第六章
 

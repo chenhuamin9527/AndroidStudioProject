@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         }
         replaceData.setOnClickListener {
             val db = dbHelper.writableDatabase
-            db.beginTransaction()   //开启事务
+            db.beginTransaction() // 开启事务
             try {
                 db.delete("Book", null, null)
                 if (true) {
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     put("price", 20.85)
                 }
                 db.insert("Book", null, values)
-                db.setTransactionSuccessful()   // 事务已经执行成功
+                db.setTransactionSuccessful() // 事务已经执行成功
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -89,3 +89,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
