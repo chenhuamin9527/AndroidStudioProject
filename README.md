@@ -850,7 +850,42 @@ button1.setOnClickListener {
   - android:mimeType。用于指定可以处理的数据类型，允许使用通配符的方式进行指定。
 - 只有当\<data>标签中指定的内容和Intent中携带的Data完全一致时，当前Activity才能够响应该Intent。当android:scheme为https，就可以响应所有https协议的Intent了。
 
+- Activity的生命周期
+  - 返回栈
+  - [返回栈工作示意图](README_Images/图3.23.png)
+  - 栈是一种后进先出的数据结构，在默认情况下，每当我们启动了一个新的Activity，它就会在返回栈中入栈，并处于栈顶的位置。而每当我们按下Back键或调用finish()方法去销毁一个Activity时，处于栈顶的Activity就会出栈，前一个入栈的Activity就会重新处于栈顶的位置。系统总是会显示处于栈顶的Activity给用户。
 
+### Activity状态
+
+1. 运行状态
+当一个Activity位于返回栈的栈顶时，Activity就处于运行状态。系统最不愿意回收的就是处于运行状态的Activity，因为这会带来非常差的用户体验。
+2. 暂停状态
+当一个Activity不再处于栈顶位置，但仍然可见时，Activity就进入了暂停状态。这是因为并不是每一个Activity都会占满整个屏幕，比如对话框形式的Activity只会占用屏幕中间的部分区域。处于暂停状态的Activity仍然是完全存活着的，系统也不愿意回收这种Activity（因为它还是可见的，回收可见的东西都会在用户体验方面有不好的影响）。
+3. 停止状态
+当一个Activity不再处于栈顶位置，并且完全不可见的时候，就进入了停止状态。系统仍然会为这种Activity保存应的状态和成员变量，但是这并不是完全可靠的，当其他地方需要内存时，处于停止状态的Activity有可能会被系统回收。
+4. 销毁状态
+一个Activity从返回栈中移除后就变成了销毁状态。系统最倾向于回收处于这种状态的Activity，以保证手机的内存充足。
+
+### Activity的生存期
+
+- Activity的7个回调方法：
+- onCreate()。它会在Activity第一次被创建的时候调用。你应该在这个方法中完成Activity的初始化操作，比如加载布局、绑定事件等。
+- onStart()。这个方法在Activity由不可见变为可见的时候调用。
+- onResume()。这个方法在Activity准备好和用户进行交互的时候调用。此时的Activity
+一定位于返回栈的栈顶，并且处于运行状态。
+- onPause()。这个方法在系统准备去启动或者恢复另一个Activity的时候调用。我们通常
+会在这个方法中将一些消耗CPU的资源释放掉，以及保存一些关键数据。
+- onStop()。这个方法在Activity完全不可见的时候调用。它和onPause()方法的主要区别在于，如果启动的新Activity是一个对话框式的Activity，那么onPause()方法会得到执行，而onStop()方法并不会执行。
+- onDestroy()。这个方法在Activity被销毁之前调用，之后Activity的状态将变为销毁状态。
+- onRestart()。这个方法在Activity由停止状态变为运行状态之前调用，也就是Activity被重新启动了。
+
+- 以上7个方法中除了onRestart()方法，其他都是两两相对的，从而又可以将Activity分为以
+下3种生存期。
+
+- 完整生存期。Activity在onCreate()方法和onDestroy()方法之间所经历的就是完整生存期。一般情况下，一个Activity会在onCreate()方法中完成各种初始化操作，而在onDestroy()方法中完成释放内存的操作。
+- 可见生存期。Activity在onStart()方法和onStop()方法之间所经历的就是可见生存期。在可见生存期内，Activity对于用户总是可见的，即便有可能无法和用户进行交互。我们可以通过这两个方法合理地管理那些对用户可见的资源。比如在onStart()方法中对资源进行加载，而在onStop()方法中对资源进行释放，从而保证处于停止状态的Activity不会占用过多内存。
+- 前台生存期。Activity在onResume()方法和onPause()方法之间所经历的就是前台生存期。在前台生存期内，Activity总是处于运行状态，此时的Activity是可以和用户进行交互的。
+- [生命周期示意图](README_Images/图3.24.png)
 
 ## 第六章
 
